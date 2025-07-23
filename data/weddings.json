@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Test",
+    "slug": "test",
+    "description": "BIdete del od nasiot prekrasen den",
+    "date": "2025-07-25",
+    "coupleEmail": "gorgikos27@gmail.com",
+    "coupleNames": "zdravko i stojanka",
+    "isActive": true,
+    "id": "mdfu85uk9595qc7gwtn",
+    "createdAt": "2025-07-23T10:45:42.428Z",
+    "updatedAt": "2025-07-23T10:45:42.428Z"
+  },
+  {
+    "title": "abe",
+    "slug": "abe",
+    "description": "asdad",
+    "date": "2025-07-26",
+    "coupleEmail": "zdravo@gmail.com",
+    "coupleNames": "abe i abe",
+    "isActive": true,
+    "id": "mdfu8tkio4vekh8f4z",
+    "createdAt": "2025-07-23T10:46:13.170Z",
+    "updatedAt": "2025-07-23T10:46:13.170Z"
+  }
+]
