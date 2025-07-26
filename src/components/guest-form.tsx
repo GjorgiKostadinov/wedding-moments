@@ -17,6 +17,8 @@ interface GuestFormProps {
 export function GuestForm({ wedding }: GuestFormProps) {
   const [loading, setLoading] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [guestName, setGuestName] = useState('')
+  const [message, setMessage] = useState('')
 
   function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files || [])
@@ -44,29 +46,51 @@ export function GuestForm({ wedding }: GuestFormProps) {
     event.preventDefault()
     setLoading(true)
 
+    console.log('🚀 Форма се испраќа...')
+    console.log('👤 Гост:', guestName)
+    console.log('💌 Порака:', message)
+    console.log('📁 Број на фајлови:', selectedFiles.length)
+
     try {
-      const formData = new FormData(event.currentTarget)
+      const formData = new FormData()
       formData.append('weddingSlug', wedding.slug)
+      formData.append('guestName', guestName)
+      formData.append('message', message)
       
       selectedFiles.forEach(file => {
         formData.append('files', file)
       })
+
+      console.log('📤 Испраќам до API...')
 
       const response = await fetch('/api/send-moment', {
         method: 'POST',
         body: formData
       })
 
+      console.log('📥 Response status:', response.status)
+
       const result = await response.json()
+      console.log('📋 Response data:', result)
 
       if (result.success) {
         toast.success(`🎉 Вашиот момент е испратен до ${wedding.coupleNames}!`)
-        event.currentTarget.reset()
+        
+        // Ресетирај ги полињата
+        setGuestName('')
+        setMessage('')
         setSelectedFiles([])
+        
+        // Ресетирај го и HTML формот
+        const form = event.currentTarget
+        if (form) {
+          form.reset()
+        }
       } else {
         throw new Error(result.error || 'Грешка при испраќање')
       }
     } catch (error) {
+      console.error('❌ Грешка:', error)
       toast.error(error instanceof Error ? error.message : "Се појави неочекувана грешка")
     } finally {
       setLoading(false)
@@ -119,13 +143,15 @@ export function GuestForm({ wedding }: GuestFormProps) {
           <CardContent className="space-y-6 relative">
             <div className="space-y-2">
               <Label htmlFor="guestName" className="text-base font-semibold text-gray-700">
-                  Вашето име *
+                ✨ Вашето име *
               </Label>
               <Input 
                 id="guestName" 
                 name="guestName" 
                 placeholder="Име и Презиме" 
                 required 
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
                 className="h-12 text-lg border-2 border-pink-200 focus:border-pink-400 rounded-xl"
               />
             </div>
@@ -138,6 +164,8 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 id="message" 
                 name="message" 
                 placeholder="Напишете убава порака..." 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className="min-h-[100px] text-lg border-2 border-pink-200 focus:border-pink-400 rounded-xl resize-none"
               />
             </div>
@@ -158,14 +186,10 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 />
                 <Camera className="absolute right-3 top-3 h-6 w-6 text-pink-400 pointer-events-none" />
               </div>
-
-              <br />
               
               <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                💡 Можете да изберете повеќе слики или видеа!
+                💡 Можете да изберете повеќе слики или видеа (без ограничување на големина)!
               </p>
-
-              <br />
               
               {selectedFiles.length > 0 && (
                 <div className="mt-4 space-y-3">
