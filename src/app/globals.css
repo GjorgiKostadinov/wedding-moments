@@ -1,9 +1,8 @@
 /* Brittany Signature Font */
 @font-face {
   font-family: 'Brittany Signature';
-  src: url('/fonts/brittany-signature.woff2') format('woff2'),
-       url('/fonts/brittany-signature.woff') format('woff'),
-       url('/fonts/brittany-signature.ttf') format('truetype');
+  src: url('/fonts/brittanysignature-webfont.woff2') format('woff2'),
+       url('/fonts/brittanysignature-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
