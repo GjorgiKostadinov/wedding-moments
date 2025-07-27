@@ -172,7 +172,7 @@ export function GuestForm({ wedding }: GuestFormProps) {
             
             <div className="space-y-3">
               <Label htmlFor="files" className="text-base font-semibold text-gray-700">
-                📸 Прикачи слики или видеа *
+                📸 Прикачи слики*
               </Label>
               
               <div className="relative">
@@ -188,8 +188,10 @@ export function GuestForm({ wedding }: GuestFormProps) {
               </div>
               
               <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                💡 Можете да изберете повеќе слики или видеа (без ограничување на големина)!
+                💡 Можете да изберете повеќе слики!
               </p>
+
+              <br />
               
               {selectedFiles.length > 0 && (
                 <div className="mt-4 space-y-3">

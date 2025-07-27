@@ -7,8 +7,13 @@ import { Footer } from "@/components/ui/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Сподели-моменти",
-  description: "Веб апликација за собирање на најубавите моменти од свадбени настани.",
+  title: "СподелиМоменти",
+  description: "Секој момент заслужува да биде споделен. Секоја приказна – запаметена.",
+  icons: {
+    icon: '/SPODELI.png',
+    shortcut: '/SPODELI.png',
+    apple: '/SPODELI.png',
+  },
 }
 
 export default function RootLayout({
@@ -18,6 +23,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="mk">
+      <head>
+        <link rel="icon" type="image/png" href="/SPODELI.png" />
+        <link rel="shortcut icon" href="/SPODELI.png" />
+        <link rel="apple-touch-icon" href="/SPODELI.png" />
+      </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <main className="flex-1">
           {children}

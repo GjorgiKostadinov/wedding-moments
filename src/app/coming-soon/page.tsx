@@ -1,7 +1,12 @@
+// Форсирај динамичко рендерирање - нема кеширање
+export const dynamic = 'force-dynamic'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Heart, Calendar, Bell, Sparkles, Users, Camera } from 'lucide-react'
 
 export default function ComingSoonPage() {
+  console.log('🔜 Coming Soon page се рендерира...')
+  
   return (
     <div 
       className="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center bg-no-repeat"
@@ -82,7 +87,7 @@ export default function ComingSoonPage() {
               
               <p className="text-sm text-pink-600 leading-relaxed">
                 Дали организирате свадба, роденден, крштевка или друг посебен настан?
-Вклучете се во „Сподели Моменти“ и овозможете им на вашите гости да ги зачуваат и споделат најубавите моменти – на едно место.
+Вклучете се во &ldquo;Сподели Моменти&rdquo; и овозможете им на вашите гости да ги зачуваат и споделат најубавите моменти – на едно место.
               </p>
               
               <div className="flex items-center justify-center gap-1 text-xs text-pink-500 mt-3">
