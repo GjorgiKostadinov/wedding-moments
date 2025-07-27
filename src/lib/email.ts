@@ -1,6 +1,4 @@
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY || 'test_key')
+import nodemailer from 'nodemailer'
 
 export interface EmailData {
   weddingTitle: string
@@ -15,11 +13,19 @@ export interface EmailData {
   }[]
 }
 
+// Nodemailer transporter конфигурација
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'spodelim@gmail.com',
+    pass: 'rkpw xvmf gezf iktv' // Вашиот App Password
+  }
+})
+
 export async function sendWeddingMoment(data: EmailData) {
   const { weddingTitle, coupleEmail, coupleNames, guestName, message, attachments } = data
   
   console.log('📧 Започнувам да испраќам мејл...')
-  console.log('🔑 API Key постои:', !!process.env.RESEND_API_KEY)
   console.log('📧 До:', coupleEmail)
   console.log('👤 Од гост:', guestName)
   console.log('📎 Број на прикачувања:', attachments.length)
@@ -68,28 +74,28 @@ export async function sendWeddingMoment(data: EmailData) {
   `
 
   try {
-    console.log('🚀 Повикувам Resend API...')
-    console.log('📤 Од email:', process.env.APP_EMAIL)
+    console.log('🚀 Повикувам Nodemailer...')
+    console.log('📤 Од email: spodelim@gmail.com')
     console.log('📧 До email:', coupleEmail)
     
-    const result = await resend.emails.send({
-      from: process.env.APP_EMAIL!,
-      to: [coupleEmail],
+    const result = await transporter.sendMail({
+      from: '"Сподели Моменти" <spodelim@gmail.com>',
+      to: coupleEmail,
       subject: `✨ ${guestName} сподели момент од вашиот настан "${weddingTitle}"`,
       html: emailContent,
       attachments: attachments.map(att => ({
         filename: att.filename,
-        content: att.content
+        content: att.content,
+        contentType: att.contentType
       }))
     })
 
-    console.log('✅ Resend резултат:', result)
-    console.log('📬 Message ID:', result.data?.id)
-    console.log('📊 Status:', result.data ? 'УСПЕШНО' : 'ПРОБЛЕМ')
+    console.log('✅ Nodemailer резултат:', result.messageId)
+    console.log('📊 Status: УСПЕШНО')
     
-    return { success: true, messageId: result.data?.id }
+    return { success: true, messageId: result.messageId }
   } catch (error) {
-    console.error('💥 Resend грешка:', error)
+    console.error('💥 Nodemailer грешка:', error)
     console.error('🔍 Детални информации:', {
       name: error instanceof Error ? error.name : 'Unknown',
       message: error instanceof Error ? error.message : 'Unknown error',
