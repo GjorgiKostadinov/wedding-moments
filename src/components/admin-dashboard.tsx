@@ -42,7 +42,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
         setWeddings(prev => prev.map(w => 
           w.id === weddingId ? updatedWedding : w
         ))
-        toast.success(`Свадбата е ${updatedWedding.isActive ? 'активирана' : 'деактивирана'}`)
+        toast.success(`Настанот е ${updatedWedding.isActive ? 'активиран' : 'деактивиран'}`)
       }
     } catch (error) {
       toast.error('Не може да се промени статусот')
@@ -52,7 +52,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
   }
 
   async function deleteWedding(weddingId: string) {
-    if (!confirm('Дали сте сигурни дека сакате да ја избришете оваа свадба?')) {
+    if (!confirm('Дали сте сигурни дека сакате да го избришете овој настан?')) {
       return
     }
 
@@ -64,10 +64,10 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
 
       if (response.ok) {
         setWeddings(prev => prev.filter(w => w.id !== weddingId))
-        toast.success('Свадбата е избришана')
+        toast.success('Настанот е избришан')
       }
     } catch (error) {
-      toast.error('Не може да се избрише свадбата')
+      toast.error('Не може да се избрише настанот')
     } finally {
       setLoading(null)
     }
@@ -77,22 +77,22 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
   const totalWeddings = weddings.length
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600 mt-1">Управување со свадбени настани</p>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-700 to-yellow-700 bg-clip-text text-transparent">Admin Dashboard</h1>
+            <p className="text-stone-600 mt-1">Управување со настани</p>
           </div>
           <div className="flex gap-3">
             <Link href="/admin/wedding/new">
-              <Button>
+              <Button className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white shadow-lg">
                 <Plus className="mr-2 h-4 w-4" />
-                Нова Свадба
+                Нов Настан
               </Button>
             </Link>
-            <Button variant="outline" onClick={handleLogout}>
+            <Button variant="outline" onClick={handleLogout} className="border-amber-200 text-amber-700 hover:bg-amber-50">
               <Power className="mr-2 h-4 w-4" />
               Одјави се
             </Button>
@@ -101,53 +101,53 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Вкупно Свадби</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-stone-700">Вкупно Настани</CardTitle>
+              <Calendar className="h-4 w-4 text-amber-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalWeddings}</div>
+              <div className="text-2xl font-bold text-amber-700">{totalWeddings}</div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Активни Свадби</CardTitle>
-              <ToggleRight className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-stone-700">Активни Настани</CardTitle>
+              <ToggleRight className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{activeWeddings}</div>
+              <div className="text-2xl font-bold text-green-700">{activeWeddings}</div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Неактивни</CardTitle>
-              <ToggleLeft className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-stone-700">Неактивни</CardTitle>
+              <ToggleLeft className="h-4 w-4 text-stone-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-500">{totalWeddings - activeWeddings}</div>
+              <div className="text-2xl font-bold text-stone-600">{totalWeddings - activeWeddings}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Weddings Table */}
-        <Card>
+        <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg">
           <CardHeader>
-            <CardTitle>Сите Свадби</CardTitle>
-            <CardDescription>Управувајте со свадбените настани и нивните поставки</CardDescription>
+            <CardTitle className="text-amber-800">Сите Настани</CardTitle>
+            <CardDescription className="text-stone-600">Управувајте со настаните и нивните поставки</CardDescription>
           </CardHeader>
           <CardContent>
             {weddings.length === 0 ? (
               <div className="text-center py-12">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-600 mb-2">Нема свадби</h3>
-                <p className="text-gray-500 mb-4">Започнете со креирање на вашата прва свадба</p>
+                <Calendar className="mx-auto h-12 w-12 text-amber-500 mb-4" />
+                <h3 className="text-lg font-semibold text-stone-700 mb-2">Нема настани</h3>
+                <p className="text-stone-500 mb-4">Започнете со креирање на вашиот прв настан</p>
                 <Link href="/admin/wedding/new">
-                  <Button>
+                  <Button className="bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white shadow-lg">
                     <Plus className="mr-2 h-4 w-4" />
-                    Креирај Свадба
+                    Креирај Настан
                   </Button>
                 </Link>
               </div>
@@ -155,42 +155,45 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Свадба</TableHead>
-                    <TableHead>Датум</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Статус</TableHead>
-                    <TableHead>Линк</TableHead>
-                    <TableHead className="text-right">Акции</TableHead>
+                    <TableHead className="text-amber-800 font-semibold">Настан</TableHead>
+                    <TableHead className="text-amber-800 font-semibold">Датум</TableHead>
+                    <TableHead className="text-amber-800 font-semibold">Email</TableHead>
+                    <TableHead className="text-amber-800 font-semibold">Статус</TableHead>
+                    <TableHead className="text-amber-800 font-semibold">Линк</TableHead>
+                    <TableHead className="text-right text-amber-800 font-semibold">Акции</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {weddings.map((wedding) => (
-                    <TableRow key={wedding.id}>
+                    <TableRow key={wedding.id} className="hover:bg-amber-50/50 transition-colors">
                       <TableCell>
                         <div>
-                          <p className="font-medium">{wedding.title}</p>
-                          <p className="text-sm text-gray-500">{wedding.coupleNames}</p>
+                          <p className="font-medium text-stone-800">{wedding.title}</p>
+                          <p className="text-sm text-stone-600">{wedding.coupleNames}</p>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-stone-700">
                         {new Date(wedding.date).toLocaleDateString('mk-MK')}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-gray-400" />
-                          <span className="text-sm">{wedding.coupleEmail}</span>
+                          <Mail className="h-4 w-4 text-amber-500" />
+                          <span className="text-sm text-stone-600">{wedding.coupleEmail}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={wedding.isActive ? "default" : "secondary"}>
-                          {wedding.isActive ? "Активна" : "Неактивна"}
+                        <Badge 
+                          variant={wedding.isActive ? "default" : "secondary"}
+                          className={wedding.isActive ? "bg-green-100 text-green-800 border-green-200 hover:bg-green-200" : "bg-stone-100 text-stone-700 border-stone-200 hover:bg-stone-200"}
+                        >
+                          {wedding.isActive ? "Активен" : "Неактивен"}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <Link 
                           href={`/wedding/${wedding.slug}`}
                           target="_blank"
-                          className="text-blue-600 hover:underline text-sm"
+                          className="text-amber-700 hover:text-amber-900 hover:underline text-sm font-medium"
                         >
                           /wedding/{wedding.slug}
                         </Link>
@@ -202,6 +205,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
                             size="sm"
                             onClick={() => toggleWeddingStatus(wedding.id)}
                             disabled={loading === wedding.id}
+                            className="border-amber-200 text-amber-700 hover:bg-amber-50 hover:border-amber-300"
                           >
                             {wedding.isActive ? (
                               <ToggleLeft className="h-4 w-4" />
@@ -215,6 +219,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
                             size="sm"
                             onClick={() => deleteWedding(wedding.id)}
                             disabled={loading === wedding.id}
+                            className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

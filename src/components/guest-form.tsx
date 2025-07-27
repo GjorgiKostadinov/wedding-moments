@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { WeddingConfig } from '@/lib/wedding-data'
-import { Heart, Upload, X, Camera, FileImage, Video, Sparkles, Calendar } from 'lucide-react'
+import { Upload, X, Camera, FileImage, Video, Sparkles, Calendar } from 'lucide-react'
 
 interface GuestFormProps {
   wedding: WeddingConfig
@@ -30,8 +30,8 @@ export function GuestForm({ wedding }: GuestFormProps) {
   }
 
   function getFileIcon(fileType: string) {
-    if (fileType.startsWith('video/')) return <Video className="h-4 w-4 text-purple-500" />
-    return <FileImage className="h-4 w-4 text-blue-500" />
+    if (fileType.startsWith('video/')) return <Video className="h-4 w-4 text-amber-600" />
+    return <FileImage className="h-4 w-4 text-yellow-600" />
   }
 
   function formatFileSize(bytes: number) {
@@ -102,38 +102,38 @@ export function GuestForm({ wedding }: GuestFormProps) {
       className="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center bg-no-repeat"
       style={{ 
         backgroundImage: 'url(/image.png)',
-        backgroundColor: '#fce7f3' // fallback розова боја
+        backgroundColor: '#f8f6f3' // fallback кремаста боја
       }}
     >
       {/* Overlay за подобра читливост */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/70 via-rose-50/70 to-purple-100/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-stone-50/80 to-yellow-50/80"></div>
 
-      {/* Floating hearts animation */}
+      {/* Floating decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-        <div className="absolute top-20 left-20 text-pink-300 animate-pulse text-4xl">💕</div>
-        <div className="absolute top-40 right-32 text-rose-300 animate-bounce text-3xl">💖</div>
-        <div className="absolute bottom-32 left-16 text-purple-300 animate-pulse text-2xl">✨</div>
-        <div className="absolute bottom-20 right-20 text-pink-300 animate-bounce text-3xl">💝</div>
+        <div className="absolute top-20 left-20 text-amber-300 animate-pulse text-4xl">✨</div>
+        <div className="absolute top-40 right-32 text-yellow-300 animate-bounce text-3xl">📸</div>
+        <div className="absolute bottom-32 left-16 text-amber-300 animate-pulse text-2xl">🌟</div>
+        <div className="absolute bottom-20 right-20 text-yellow-300 animate-bounce text-3xl">🎉</div>
       </div>
 
       <Card className="w-full max-w-lg shadow-2xl border-0 bg-white/95 backdrop-blur-sm relative z-20">
         {/* Decorative border */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-lg opacity-20 blur-sm"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 rounded-lg opacity-20 blur-sm"></div>
         
         <CardHeader className="text-center relative">
-          <div className="mx-auto mb-4 p-4 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full w-fit shadow-lg">
-            <Heart className="h-10 w-10 text-pink-600 animate-pulse" />
+          <div className="mx-auto mb-4 p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-full w-fit shadow-lg">
+            <Camera className="h-10 w-10 text-amber-600 animate-pulse" />
           </div>
           
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-amber-700 to-yellow-700 bg-clip-text text-transparent">
             {wedding.title}
           </CardTitle>
           
-          <CardDescription className="text-gray-600 text-lg leading-relaxed">
-            {wedding.description || 'Споделете ги вашите најубави моменти од свадбата!'}
+          <CardDescription className="text-stone-600 text-lg leading-relaxed">
+            {wedding.description || 'Споделете ги вашите најубави моменти од настанот!'}
           </CardDescription>
           
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
+          <div className="flex items-center justify-center gap-2 text-sm text-stone-500 bg-stone-50 px-4 py-2 rounded-full">
             <Calendar className="h-4 w-4" />
             <span className="font-medium">📅 {wedding.date}</span>
           </div>
@@ -142,7 +142,7 @@ export function GuestForm({ wedding }: GuestFormProps) {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6 relative">
             <div className="space-y-2">
-              <Label htmlFor="guestName" className="text-base font-semibold text-gray-700">
+              <Label htmlFor="guestName" className="text-base font-semibold text-stone-700">
                 ✨ Вашето име *
               </Label>
               <Input 
@@ -152,12 +152,12 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 required 
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
-                className="h-12 text-lg border-2 border-pink-200 focus:border-pink-400 rounded-xl"
+                className="h-12 text-lg border-2 border-amber-200 focus:border-amber-400 rounded-xl"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="message" className="text-base font-semibold text-gray-700">
+              <Label htmlFor="message" className="text-base font-semibold text-stone-700">
                 💌 Порака до {wedding.coupleNames}
               </Label>
               <Textarea 
@@ -166,12 +166,12 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 placeholder="Напишете убава порака..." 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-[100px] text-lg border-2 border-pink-200 focus:border-pink-400 rounded-xl resize-none"
+                className="min-h-[100px] text-lg border-2 border-amber-200 focus:border-amber-400 rounded-xl resize-none"
               />
             </div>
             
             <div className="space-y-3">
-              <Label htmlFor="files" className="text-base font-semibold text-gray-700">
+              <Label htmlFor="files" className="text-base font-semibold text-stone-700">
                 📸 Прикачи слики*
               </Label>
               
@@ -182,12 +182,12 @@ export function GuestForm({ wedding }: GuestFormProps) {
                   accept="image/*,video/*" 
                   multiple
                   onChange={handleFileSelect}
-                  className="h-12 border-2 border-dashed border-pink-300 hover:border-pink-400 rounded-xl cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                  className="h-12 border-2 border-dashed border-amber-300 hover:border-amber-400 rounded-xl cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
                 />
-                <Camera className="absolute right-3 top-3 h-6 w-6 text-pink-400 pointer-events-none" />
+                <Camera className="absolute right-3 top-3 h-6 w-6 text-amber-400 pointer-events-none" />
               </div>
               
-              <p className="text-sm text-gray-500 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+              <p className="text-sm text-stone-500 bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400">
                 💡 Можете да изберете повеќе слики!
               </p>
 
@@ -196,20 +196,20 @@ export function GuestForm({ wedding }: GuestFormProps) {
               {selectedFiles.length > 0 && (
                 <div className="mt-4 space-y-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-purple-500" />
-                    <p className="text-base font-semibold text-gray-700">
+                    <Sparkles className="h-5 w-5 text-amber-600" />
+                    <p className="text-base font-semibold text-stone-700">
                       Селектирани датотеки ({selectedFiles.length}):
                     </p>
                   </div>
                   
                   <div className="space-y-2 max-h-40 overflow-y-auto">
                     {selectedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                      <div key={index} className="flex items-center justify-between bg-gradient-to-r from-stone-50 to-amber-50 p-3 rounded-lg border border-stone-200 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {getFileIcon(file.type)}
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-800 truncate">{file.name}</p>
-                            <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                            <p className="text-sm font-medium text-stone-800 truncate">{file.name}</p>
+                            <p className="text-xs text-stone-500">{formatFileSize(file.size)}</p>
                           </div>
                         </div>
                         <Button
@@ -232,7 +232,7 @@ export function GuestForm({ wedding }: GuestFormProps) {
           <CardFooter className="flex flex-col gap-4 relative">
             <Button 
               type="submit" 
-              className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 hover:from-pink-600 hover:via-rose-600 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200 rounded-xl" 
+              className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-white shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200 rounded-xl" 
               disabled={loading || selectedFiles.length === 0}
             >
               {loading ? (
@@ -242,18 +242,18 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 </>
               ) : (
                 <>
-                  <Heart className="mr-3 h-5 w-5 animate-pulse" />
-                  Испрати момент со љубов
+                  <Camera className="mr-3 h-5 w-5 animate-pulse" />
+                  Испрати момент
                 </>
               )}
             </Button>
             
-            <div className="text-center bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl border border-pink-200">
-              <p className="text-sm text-gray-600 font-medium">
+            <div className="text-center bg-gradient-to-r from-amber-50 to-yellow-50 p-4 rounded-xl border border-amber-200">
+              <p className="text-sm text-stone-600 font-medium">
                 ✉️ Датотеките ќе бидат испратени директно на мејл!
               </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Нивната радост ќе биде уште поголема кога ќе ги споделите вашите моменти со нив! 💕
+              <p className="text-xs text-stone-500 mt-1">
+                Нивната радост ќе биде уште поголема кога ќе ги споделите вашите моменти со нив! 🎉
               </p>
             </div>
           </CardFooter>

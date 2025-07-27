@@ -31,8 +31,8 @@ export async function sendWeddingMoment(data: EmailData) {
   
   const emailContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background: linear-gradient(135deg, #f472b6, #a855f7); padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">💕 Нов момент од вашиот настан!</h1>
+      <div style="background: linear-gradient(135deg, #d97706, #f59e0b); padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">🎉 Нов момент од вашиот настан!</h1>
       </div>
       
       <div style="background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -43,24 +43,24 @@ export async function sendWeddingMoment(data: EmailData) {
         </p>
         
         ${message ? `
-          <div style="background: #f8fafc; padding: 15px; border-left: 4px solid #f472b6; margin: 20px 0;">
+          <div style="background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; margin: 20px 0;">
             <p style="margin: 0; font-style: italic; color: #555;">
               "${message}"
             </p>
           </div>
         ` : ''}
         
-        <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #333; margin-top: 0;">📎 Прикачени датотеки:</h3>
-          <ul style="color: #666;">
-            ${attachments.map(att => `<li>${att.filename}</li>`).join('')}
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e7eb;">
+          <h3 style="color: #333; margin-top: 0; color: #d97706;">📎 Прикачени датотеки:</h3>
+          <ul style="color: #666; margin: 0; padding-left: 20px;">
+            ${attachments.map(att => `<li style="margin: 5px 0;">${att.filename}</li>`).join('')}
           </ul>
         </div>
         
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="color: #888; font-size: 14px; margin: 0;">
             Испратено од СподелиМоменти апликацијата<br>
-            <span style="color: #f472b6;">💕 Спомени што траат засекогаш 💕</span>
+            <span style="color: #d97706; font-weight: 600;">✨ Спомени што траат засекогаш ✨</span>
           </p>
         </div>
       </div>
@@ -75,7 +75,7 @@ export async function sendWeddingMoment(data: EmailData) {
     const result = await resend.emails.send({
       from: process.env.APP_EMAIL!,
       to: [coupleEmail],
-      subject: `💕 ${guestName} сподели момент од вашата свадба "${weddingTitle}"`,
+      subject: `✨ ${guestName} сподели момент од вашиот настан "${weddingTitle}"`,
       html: emailContent,
       attachments: attachments.map(att => ({
         filename: att.filename,
