@@ -188,7 +188,7 @@ export function GuestForm({ wedding }: GuestFormProps) {
               </div>
               
               <p className="text-sm text-stone-500 bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400">
-                💡 Можете да изберете повеќе слики!
+                💡 Изберете 1 слика и испратете!
               </p>
 
               <br />
