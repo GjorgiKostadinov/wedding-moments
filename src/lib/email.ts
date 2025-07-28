@@ -13,11 +13,14 @@ export interface EmailData {
   }[]
 }
 
+// Brevo SMTP со порт 2525 (не е блокиран!)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp-relay.brevo.com',
+  port: 2525, // KLJUČНО: Користи порт 2525 наместо 587!
+  secure: false,
   auth: {
-    user: 'spodelim@gmail.com',
-    pass: 'rkpw xvmf gezf iktv'
+    user: process.env.BREVO_SMTP_USER || '934e85001@smtp-brevo.com',
+    pass: process.env.BREVO_SMTP_PASS || 'zJEbOUGxBcmVFkT9'
   },
   connectionTimeout: 60000,
   greetingTimeout: 30000,
@@ -27,7 +30,7 @@ const transporter = nodemailer.createTransport({
 export async function sendWeddingMoment(data: EmailData) {
   const { weddingTitle, coupleEmail, coupleNames, guestName, message, attachments } = data
   
-  console.log('📧 Започнувам да испраќам мејл...')
+  console.log('📧 Започнувам да испраќам мејл преку Brevo порт 2525...')
   console.log('📧 До:', coupleEmail)
   console.log('👤 Од гост:', guestName)
   console.log('📎 Број на прикачувања:', attachments.length)
@@ -42,10 +45,21 @@ export async function sendWeddingMoment(data: EmailData) {
   const totalMB = Math.round(totalAttachmentSize / 1024 / 1024 * 100) / 100
   console.log(`📊 Вкупен размер: ${totalMB}MB`)
   
+  // Brevo лимит е 25MB по мејл
+  if (totalAttachmentSize > 25 * 1024 * 1024) {
+    console.log('⚠️ ПРЕДУПРЕДУВАЊЕ: Над Brevo лимит од 25MB!')
+    return { 
+      success: false, 
+      error: `Размерот ${totalMB}MB е над Brevo лимитот од 25MB` 
+    }
+  }
+  
   const emailContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="background: linear-gradient(135deg, #d97706, #f59e0b); padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">🎉 Нов момент од вашиот настан!</h1>
+        <h1 style="color: white; margin: 0; font-size: 24px;">
+           Нов момент од вашиот настан!
+        </h1>
       </div>
       
       <div style="background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -84,10 +98,11 @@ export async function sendWeddingMoment(data: EmailData) {
   `
 
   try {
-    console.log('🚀 Повикувам Gmail...')
+    console.log('🚀 Повикувам Brevo SMTP преку порт 2525...')
+    console.log('📤 Од: noreply@spodelimomenti.mk')
     
     const result = await transporter.sendMail({
-      from: '"Сподели Моменти" <spodelim@gmail.com>',
+      from: '" СподелиМоменти - SpodeliMomenti.mk" <noreply@spodelimomenti.mk>',
       to: coupleEmail,
       subject: `✨ ${guestName} сподели момент од вашиот настан "${weddingTitle}"`,
       html: emailContent,
@@ -98,17 +113,17 @@ export async function sendWeddingMoment(data: EmailData) {
       }))
     })
 
-    console.log('✅ Gmail одговори успешно')
+    console.log('✅ Brevo одговори успешно преку порт 2525!')
     console.log('📧 Message ID:', result.messageId)
     
     return { success: true, messageId: result.messageId }
   } catch (error) {
-    console.error('💥 Gmail грешка:', error)
+    console.error('💥 Brevo грешка на порт 2525:', error)
     
     let errorMessage = 'Непозната грешка'
     if (error instanceof Error) {
       if (error.message.includes('Message too large')) {
-        errorMessage = 'Мејлот е преголем за Gmail (над 25MB)'
+        errorMessage = 'Мејлот е преголем за Brevo (над 25MB)'
       } else if (error.message.includes('timeout')) {
         errorMessage = 'Timeout при испраќање'
       } else {
