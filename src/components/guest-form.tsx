@@ -208,16 +208,13 @@ export function GuestForm({ wedding }: GuestFormProps) {
 
           {/* Галерија копче */}
           <div className="mt-6">
-            <Button
-              variant="outline"
-              asChild
-              className="w-full h-12 text-lg font-semibold border-2 border-amber-200 hover:border-amber-300 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
+            <Link 
+              href={`/wedding/${wedding.slug}/gallery`}
+              className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-white shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200 rounded-xl flex items-center justify-center gap-3"
             >
-              <Link href={`/wedding/${wedding.slug}/gallery`}>
-                <ImageIcon className="mr-2 h-5 w-5" />
-                 Погледнете ја галеријата од гостите
-              </Link>
-            </Button>
+              <ImageIcon className="h-5 w-5" />
+              Погледнете ја галеријата од гостите
+            </Link>
           </div>
         </CardHeader>
         
