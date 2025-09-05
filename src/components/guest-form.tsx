@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { WeddingConfig } from '@/lib/wedding-data'
-import { Upload, X, Camera, FileImage, Video, Sparkles, Calendar } from 'lucide-react'
+import { Upload, X, Camera, FileImage, Video, Sparkles, Calendar, Image as ImageIcon } from 'lucide-react'
+import Link from 'next/link'
 
 interface GuestFormProps {
   wedding: WeddingConfig
@@ -22,24 +23,91 @@ export function GuestForm({ wedding }: GuestFormProps) {
 
   function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files || [])
-    setSelectedFiles(prev => [...prev, ...files])
+    const maxFiles = 5
+    const maxFileSize = 10 * 1024 * 1024 // 10MB по фајл
+    
+    // Провери големина на секој фајл
+    const oversizedFiles = files.filter(file => file.size > maxFileSize)
+    const validFiles = files.filter(file => file.size <= maxFileSize)
+    
+    if (oversizedFiles.length > 0) {
+      const names = oversizedFiles.map(f => 
+        `${f.name} (${formatFileSize(f.size)})`
+      ).join(', ')
+      
+      toast.error(`📁 Фајловите се преголеми (максимум 10MB по фајл): ${names}`, {
+        duration: 5000
+      })
+      
+      if (validFiles.length === 0) {
+        event.target.value = ''
+        return
+      }
+    }
+    
+    // Провери тековен број + валидни датотеки
+    const totalFiles = selectedFiles.length + validFiles.length
+    
+    if (totalFiles > maxFiles) {
+      // Пресметај колку датотеки можат да се додадат
+      const remainingSlots = maxFiles - selectedFiles.length
+      
+      if (remainingSlots <= 0) {
+        toast.error(`📋 Лимитот е ${maxFiles} датотеки одеднаш! Испратете го моментот, па додајте повеќе. 😊`)
+        event.target.value = ''
+        return
+      }
+      
+      // Додај само дозволен број
+      const allowedFiles = validFiles.slice(0, remainingSlots)
+      const rejectedCount = validFiles.length - allowedFiles.length
+      
+      setSelectedFiles(prev => [...prev, ...allowedFiles])
+      
+      let message = `📋 Додадени ${allowedFiles.length} датотеки.`
+      if (rejectedCount > 0) {
+        message += ` ${rejectedCount} се прескокнати (лимит: ${maxFiles}).`
+      }
+      if (oversizedFiles.length > 0) {
+        message += ` ${oversizedFiles.length} се преголеми.`
+      }
+      message += ` Испратете го моментот, па додајте ги останатите! 🎉`
+      
+      toast.warning(message, { duration: 5000 })
+    } else {
+      // Сè е во ред, додај ги валидните
+      setSelectedFiles(prev => [...prev, ...validFiles])
+      
+      if (validFiles.length > 0) {
+        toast.success(`📸 Додадени ${validFiles.length} датотеки! Вкупно: ${totalFiles}`)
+      }
+      
+      if (oversizedFiles.length > 0) {
+        toast.warning(`⚠️ ${oversizedFiles.length} фајлови се прескокнати поради големина (над 10MB)`, {
+          duration: 4000
+        })
+      }
+    }
+    
+    // Ресетирај го input за да може повторно да се избираат исти датотеки
+    event.target.value = ''
   }
 
   function removeFile(index: number) {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index))
   }
 
-  function getFileIcon(fileType: string) {
-    if (fileType.startsWith('video/')) return <Video className="h-4 w-4 text-amber-600" />
-    return <FileImage className="h-4 w-4 text-yellow-600" />
-  }
-
-  function formatFileSize(bytes: number) {
+  function formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  function getFileIcon(fileType: string) {
+    if (fileType.startsWith('video/')) return <Video className="h-4 w-4 text-amber-600" />
+    return <FileImage className="h-4 w-4 text-yellow-600" />
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -137,6 +205,20 @@ export function GuestForm({ wedding }: GuestFormProps) {
             <Calendar className="h-4 w-4" />
             <span className="font-medium">📅 {wedding.date}</span>
           </div>
+
+          {/* Галерија копче */}
+          <div className="mt-6">
+            <Button
+              variant="outline"
+              asChild
+              className="w-full h-12 text-lg font-semibold border-2 border-amber-200 hover:border-amber-300 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
+            >
+              <Link href={`/wedding/${wedding.slug}/gallery`}>
+                <ImageIcon className="mr-2 h-5 w-5" />
+                 Погледнете ја галеријата од гостите
+              </Link>
+            </Button>
+          </div>
         </CardHeader>
         
         <form onSubmit={handleSubmit}>
@@ -172,7 +254,7 @@ export function GuestForm({ wedding }: GuestFormProps) {
             
             <div className="space-y-3">
               <Label htmlFor="files" className="text-base font-semibold text-stone-700">
-                📸 Прикачи слики*
+                📸 Прикачи овде*
               </Label>
               
               <div className="relative">
@@ -187,8 +269,24 @@ export function GuestForm({ wedding }: GuestFormProps) {
                 <Camera className="absolute right-3 top-3 h-6 w-6 text-amber-400 pointer-events-none" />
               </div>
               
+              {/* Индикатор за лимит */}
+              <div className="text-sm text-center">
+                <span className={`font-medium px-3 py-1 rounded-full ${
+                  selectedFiles.length >= 5 
+                    ? 'bg-red-100 text-red-700' 
+                    : 'bg-blue-100 text-blue-700'
+                }`}>
+                  📋 {selectedFiles.length}/5 датотеки избрани
+                </span>
+                {selectedFiles.length >= 5 && (
+                  <p className="text-red-600 mt-2 bg-red-50 p-2 rounded-lg">
+                    💡 Испратете го моментот за да додадете повеќе датотеки!
+                  </p>
+                )}
+              </div>
+              
               <p className="text-sm text-stone-500 bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400">
-                💡 Изберете 1 слика и испратете!
+                💡 Можете да прикачите до 5 датотеки одеднаш (до 10MB). Ако имате повеќе, слободно поделете ги во повеќе пораки!
               </p>
 
               <br />

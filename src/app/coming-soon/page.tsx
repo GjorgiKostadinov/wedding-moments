@@ -2,7 +2,8 @@
 export const dynamic = 'force-dynamic'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Calendar, Bell, Sparkles, Users, Camera } from 'lucide-react'
+import { Calendar, Bell, Sparkles, Users, Camera, Instagram } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ComingSoonPage() {
   console.log('🔜 Coming Soon page се рендерира...')
@@ -64,6 +65,23 @@ export default function ComingSoonPage() {
               <div className="flex items-center gap-3 text-yellow-800">
                 <Bell className="h-5 w-5 text-yellow-600" />
                 <span className="font-semibold">Телефон/Viber: +389 77 409 939</span>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-stone-50 to-amber-50 p-4 rounded-xl border border-stone-200 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 text-stone-700">
+                <Instagram className="h-5 w-5 text-stone-600" />
+                <div className="flex flex-col">
+                  <span className="font-semibold">Заследете не на Instagram:</span>
+                  <Link 
+                    href="https://www.instagram.com/spodelimomenti.mk/" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-600 hover:text-amber-700 font-medium text-sm hover:underline transition-colors"
+                  >
+                    @spodelimomenti.mk
+                  </Link>
+                </div>
               </div>
             </div>
 

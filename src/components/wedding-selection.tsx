@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, Users, MapPin, Sparkles, Camera } from 'lucide-react'
+import { Calendar, Users, Sparkles, Camera } from 'lucide-react'
 import { WeddingConfig } from '@/lib/wedding-data'
 import { useRouter } from 'next/navigation'
 

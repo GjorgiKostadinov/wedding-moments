@@ -36,7 +36,7 @@ export default function AdminLogin() {
       } else {
         toast.error(result.error || 'Грешка при најавување')
       }
-    } catch (error) {
+    } catch {
       toast.error('Се појави проблем при најавување')
     } finally {
       setLoading(false)

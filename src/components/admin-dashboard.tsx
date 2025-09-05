@@ -10,6 +10,7 @@ import { WeddingConfig } from '@/lib/wedding-data'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { PhotoCleanup } from '@/components/photo-cleanup'
 
 interface AdminDashboardProps {
   weddings: WeddingConfig[]
@@ -44,7 +45,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
         ))
         toast.success(`Настанот е ${updatedWedding.isActive ? 'активиран' : 'деактивиран'}`)
       }
-    } catch (error) {
+    } catch {
       toast.error('Не може да се промени статусот')
     } finally {
       setLoading(null)
@@ -66,7 +67,7 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
         setWeddings(prev => prev.filter(w => w.id !== weddingId))
         toast.success('Настанот е избришан')
       }
-    } catch (error) {
+    } catch {
       toast.error('Не може да се избрише настанот')
     } finally {
       setLoading(null)
@@ -173,7 +174,13 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
                         </div>
                       </TableCell>
                       <TableCell className="text-stone-700">
-                        {new Date(wedding.date).toLocaleDateString('mk-MK')}
+                        {(() => {
+                          const date = new Date(wedding.date)
+                          const day = date.getDate().toString().padStart(2, '0')
+                          const month = (date.getMonth() + 1).toString().padStart(2, '0')
+                          const year = date.getFullYear()
+                          return `${day}.${month}.${year}`
+                        })()}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -232,6 +239,11 @@ export function AdminDashboard({ weddings: initialWeddings }: AdminDashboardProp
             )}
           </CardContent>
         </Card>
+
+        {/* Photo Cleanup Section */}
+        <div className="mt-8">
+          <PhotoCleanup />
+        </div>
       </div>
     </div>
   )

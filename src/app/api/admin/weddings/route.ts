@@ -16,7 +16,7 @@ export async function GET() {
   try {
     const weddings = await getAllWeddings()
     return NextResponse.json(weddings)
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Грешка при вчитување на свадби' },
       { status: 500 }
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const weddingData = await request.json()
     const newWedding = await createWedding(weddingData)
     return NextResponse.json(newWedding)
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Грешка при креирање на свадба' },
       { status: 500 }

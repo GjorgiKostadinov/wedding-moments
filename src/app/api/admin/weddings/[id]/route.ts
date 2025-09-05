@@ -25,7 +25,7 @@ export async function PUT(
     }
     
     return NextResponse.json(updatedWedding)
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Грешка при ажурирање на свадба' },
       { status: 500 }
@@ -50,7 +50,7 @@ export async function DELETE(
     }
     
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Грешка при бришење на свадба' },
       { status: 500 }

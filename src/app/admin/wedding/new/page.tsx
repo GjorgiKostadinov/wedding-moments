@@ -51,10 +51,10 @@ export default function NewWeddingPage() {
         toast.success('Свадбата е успешно креирана!')
         router.push('/admin')
       } else {
-        const error = await response.json()
-        toast.error(error.error || 'Грешка при креирање')
+        const errorData = await response.json()
+        toast.error(errorData.error || 'Грешка при креирање')
       }
-    } catch (error) {
+    } catch {
       toast.error('Се појави неочекувана грешка')
     } finally {
       setLoading(false)

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getWeddingBySlug } from '@/lib/wedding-data'
 import { sendWeddingMoment } from '@/lib/email'
+import fs from 'fs'
+import path from 'path'
 
 // Gmail лимити
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB по фајл
@@ -81,6 +83,13 @@ export async function POST(request: NextRequest) {
     // Процесирај фајлови
     console.log('📎 Процесирам фајлови...')
     const attachments = []
+    const savedPhotos = []
+    
+    // Креирај uploads фолдер ако не постои
+    const uploadsDir = path.join(process.cwd(), 'public', 'api', 'uploads')
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true })
+    }
     
     for (const file of files) {
       console.log(`📄 Обработувам: ${file.name}`)
@@ -89,13 +98,36 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
         
+        // Генерирај уникатно име за фајлот
+        const timestamp = Date.now()
+        const random = Math.random().toString(36).substring(2, 8)
+        const extension = path.extname(file.name)
+        const uniqueFilename = `${timestamp}-${random}${extension}`
+        
+        // Зачувај фајл на диск
+        const filePath = path.join(uploadsDir, uniqueFilename)
+        fs.writeFileSync(filePath, buffer)
+        
         attachments.push({
           filename: file.name,
           content: buffer,
           contentType: file.type || 'application/octet-stream'
         })
         
-        console.log(`✅ Готово: ${file.name}`)
+        // Додај во листа за photos.json
+        savedPhotos.push({
+          id: `${timestamp}-${random}`,
+          filename: uniqueFilename,
+          originalName: file.name,
+          guestName,
+          message: message || '',
+          uploadedAt: new Date().toISOString(),
+          weddingSlug,
+          fileSize: file.size,
+          contentType: file.type
+        })
+        
+        console.log(`✅ Готово: ${file.name} -> ${uniqueFilename}`)
       } catch (fileError) {
         console.error(`❌ Грешка при ${file.name}:`, fileError)
         return NextResponse.json(
@@ -120,11 +152,32 @@ export async function POST(request: NextRequest) {
     if (result.success) {
       console.log(`🎉 Успех! Message ID: ${result.messageId}`)
       
+      // Зачувај информации за сликите во photos.json
+      try {
+        const photosPath = path.join(process.cwd(), 'data', 'photos.json')
+        let existingPhotos = []
+        
+        if (fs.existsSync(photosPath)) {
+          const data = fs.readFileSync(photosPath, 'utf-8')
+          existingPhotos = JSON.parse(data)
+        }
+        
+        // Додај нови слики
+        const updatedPhotos = [...existingPhotos, ...savedPhotos]
+        fs.writeFileSync(photosPath, JSON.stringify(updatedPhotos, null, 2))
+        
+        console.log('💾 Слики зачувани во photos.json')
+      } catch (saveError) {
+        console.error('❌ Грешка при зачувување на photos.json:', saveError)
+        // Не го неуспешај целиот процес ако photos.json не може да се зачува
+      }
+      
       return NextResponse.json({ 
         success: true, 
         message: 'Момента е успешно испратен!',
         messageId: result.messageId,
-        totalSize: totalMB + 'MB'
+        totalSize: totalMB + 'MB',
+        savedPhotos: savedPhotos.length
       })
     } else {
       console.log('❌ Gmail грешка:', result.error)
